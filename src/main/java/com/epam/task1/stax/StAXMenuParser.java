@@ -1,6 +1,7 @@
 package com.epam.task1.stax;
 
 import com.epam.task1.otherclasses.Speech;
+import org.apache.log4j.Logger;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -17,6 +18,11 @@ import java.util.List;
  */
 public class StAXMenuParser {
 
+    static final Logger logger = Logger.getLogger(StAXMenuParser.class);
+
+    private StAXMenuParser() {
+    }
+
     public static List<Speech> performParse(String url) throws IOException {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         inputFactory.setProperty("http://java.sun.com/xml/stream/properties/ignore-external-dtd", Boolean.TRUE);
@@ -26,7 +32,7 @@ public class StAXMenuParser {
 
             return process(reader);
         } catch (XMLStreamException e) {
-            System.out.println(e.getMessage());
+            logger.error(e);
         }
         return new LinkedList<>();
     }

@@ -2,6 +2,7 @@ package com.epam.task1;
 
 import com.epam.task1.otherclasses.Pair;
 import com.epam.task1.otherclasses.Speech;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,21 +19,26 @@ import java.util.Scanner;
  */
 public class View {
 
-    public static final String DEFAULT_PIECE_URL_FOR_PARCE = "http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml";
+    public static final String DEFAULT_PIECE_URL_FOR_PARSE = "http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml";
+
+    static final Logger logger = Logger.getLogger(View.class);
+
+    private View() {
+    }
 
     public static void main(String[] args) throws SAXException {
 
-        String parser = getParserChoose();
+        org.apache.log4j.BasicConfigurator.configure();
+
         String url = getPieceChoose();
-        try {
-            List<Speech> speechList = Controller.performParse(parser,url);
-            for (Map.Entry<String,Pair> m:
+        String parser = getParserChoose();
+
+        List<Speech> speechList;
+        speechList = Controller.performParse(parser, url);
+        for (Map.Entry<String, Pair> m :
                 Controller.countStatistics(speechList).entrySet()) {
-                System.out.println(m.getKey()   + ". Speeches: "        + m.getValue().getSpeechCount()
-                                                + " Average words: "    + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
-            }
-        } catch (IOException e) {
-            System.out.println("IO Error, try again!");
+            System.out.println(m.getKey() + ". Speeches: " + m.getValue().getSpeechCount()
+                                          + " Average words: " + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
         }
     }
 
@@ -48,17 +54,19 @@ public class View {
             for (int i = 0; i < links.size(); i++) {
                 Element link = links.get(i);
                 System.out.println(i + ": " + link.text());
+
             }
+            System.out.println("Enter number for select piece for parse from list above:");
             Scanner sc = new Scanner(System.in);
-            System.out.println("Enter:");
+
             int i = sc.nextInt();
             if (i >= 0 && i < 36) {
-                return links.get(i).absUrl("href").toString();
+                return links.get(i).absUrl("href");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
-        return DEFAULT_PIECE_URL_FOR_PARCE;
+        return DEFAULT_PIECE_URL_FOR_PARSE;
     }
 
     public static String getParserChoose() {

@@ -1,14 +1,16 @@
 package com.epam.task2;
 
+
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -17,7 +19,13 @@ import java.net.URL;
  */
 public class ValidatePOM {
 
-    public static String validate(String fileName) throws ParserConfigurationException, IOException, SAXException {
+    static final Logger logger = Logger.getLogger(ValidatePOM.class);
+
+
+    private ValidatePOM() {
+    }
+
+    public static String validate(String fileName) {
 
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -25,9 +33,11 @@ public class ValidatePOM {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(fileName)));
             return "instance document is good";
-        } catch (Exception e) {
-            return "instance document is invalid!";
+        } catch (IOException | SAXException e) {
+            org.apache.log4j.BasicConfigurator.configure();
+            logger.error(e);
         }
+        return "instance document is invalid!";
 
     }
 }

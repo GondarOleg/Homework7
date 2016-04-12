@@ -5,10 +5,11 @@ import com.epam.task1.otherclasses.Pair;
 import com.epam.task1.otherclasses.Speech;
 import com.epam.task1.sax.SAXParser;
 import com.epam.task1.stax.StAXMenuParser;
-import org.xml.sax.SAXException;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,20 +18,26 @@ import java.util.Map;
  */
 public class Controller {
 
+    static final Logger logger = Logger.getLogger(View.class);
 
-    public static List<Speech> performParse(String parser, String url) throws IOException, SAXException {
+    private Controller() {
+    }
+
+    public static List<Speech> performParse(String parser, String url) {
 
         switch (parser) {
-            case "DOM": {
+            case "DOM":
                 return MyDOMParser.performParse(url);
-            }
-            case "SAX": {
+            case "SAX":
                 return SAXParser.performParse(url);
-            }
-            default: {
-                return StAXMenuParser.performParse(url);
-            }
+            default:
+                try {
+                    return StAXMenuParser.performParse(url);
+                } catch (IOException e) {
+                    logger.error(e);
+                }
         }
+        return new LinkedList<>();
     }
 
     public static Map<String, Pair> countStatistics(List<Speech> list) {

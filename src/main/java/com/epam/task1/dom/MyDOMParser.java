@@ -1,7 +1,10 @@
 package com.epam.task1.dom;
 
 import com.epam.task1.otherclasses.Speech;
+
+
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -16,38 +19,55 @@ import java.util.List;
  */
 public class MyDOMParser {
 
-    public static List<Speech> performParse(String url) throws IOException, SAXException {
+    static final Logger logger = Logger.getLogger(MyDOMParser.class);
+
+    private MyDOMParser() {
+
+    }
+
+
+    public static List<Speech> performParse(String url) {
 
         DOMParser parser = new DOMParser();
-        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        parser.parse(url);
-        Document document = parser.getDocument();
-        Element root = document.getDocumentElement();
-        List<Speech> menu = new LinkedList<>();
+        try {
+            parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            parser.parse(url);
+            Document document = parser.getDocument();
+            Element root = document.getDocumentElement();
+            List<Speech> menu = new LinkedList<>();
 
-        NodeList speechNodes = root.getElementsByTagName("SPEECH");
-        Speech speech = null;
-        for (int i = 0; i < speechNodes.getLength(); i++) {
-            speech = new Speech();
-            Element speechElement = (Element) speechNodes.item(i);
-            speech.setSpeaker(getSingleChild(speechElement, "SPEAKER").getTextContent().trim());
+            NodeList speechNodes = root.getElementsByTagName("SPEECH");
 
-            NodeList lineNodes = speechElement.getChildNodes();
+            for (int i = 0; i < speechNodes.getLength(); i++) {
+                Speech speech = new Speech();
+                Element speechElement = (Element) speechNodes.item(i);
+                speech.setSpeaker(getSingleChild(speechElement, "SPEAKER").getTextContent().trim());
 
-            for (int j = 0; j < lineNodes.getLength(); j++) {
-                if (lineNodes.item(j).getNodeName().equals("LINE")) {
-                    speech.addLine(lineNodes.item(j).getTextContent().trim());
-                }
+                NodeList lineNodes = speechElement.getChildNodes();
+                checkLINE(speech, lineNodes);
+                menu.add(speech);
             }
-            menu.add(speech);
+
+            return menu;
+        } catch (SAXException e) {
+            logger.error("Sorry, in SAX something wrong!", e);
+        } catch (IOException e) {
+            logger.error("Sorry, in IO something wrong!", e);
         }
-        return menu;
+        return new LinkedList<>();
+    }
+
+    private static void checkLINE(Speech speech, NodeList lineNodes) {
+        for (int j = 0; j < lineNodes.getLength(); j++) {
+            if ("LINE".equals(lineNodes.item(j).getNodeName())) {
+                speech.addLine(lineNodes.item(j).getTextContent().trim());
+            }
+        }
     }
 
     private static Element getSingleChild(Element element, String childName) {
         NodeList nlist = element.getElementsByTagName(childName);
-        Element child = (Element) nlist.item(0);
-        return child;
+        return (Element) nlist.item(0);
     }
 }
 

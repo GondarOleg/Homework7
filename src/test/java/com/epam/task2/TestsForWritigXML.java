@@ -18,54 +18,29 @@ public class TestsForWritigXML {
     public static final String FILE_NAME_FOR_TESTS = "pom1.xml";
 
     @Test
-    public void testValidationXML(){
+    public void testValidationXML() {
         try {
             FileWriter fileWriter = new FileWriter(FILE_NAME_FOR_TESTS);
             fileWriter.write("test");
             fileWriter.close();
-            Assert.assertEquals("instance document is good", ValidatePOM.validate("pom.xml"));
             Assert.assertEquals("instance document is invalid!", ValidatePOM.validate(FILE_NAME_FOR_TESTS));
+            Assert.assertEquals("instance document is good", ValidatePOM.validate("pom.xml"));
+
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testWritingWithDOM(){
-        try {
-            WritingWithDOM.performWrite(FILE_NAME_FOR_TESTS);
-            Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
+    public void testWritingWithDOM() {
+        WritingWithDOM.performWrite(FILE_NAME_FOR_TESTS);
+        Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
     }
 
     @Test
-    public void testWritingWithStAX(){
-        try {
-            WritingWithStAX.performWrite(FILE_NAME_FOR_TESTS);
-            try {
-                Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
+    public void testWritingWithStAX() {
+        WritingWithStAX.performWrite(FILE_NAME_FOR_TESTS);
+        Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
 
     }
 }

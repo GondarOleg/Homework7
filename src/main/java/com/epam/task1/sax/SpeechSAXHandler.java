@@ -1,6 +1,7 @@
 package com.epam.task1.sax;
 
 import com.epam.task1.otherclasses.Speech;
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -13,6 +14,8 @@ import java.util.List;
  */
 public class SpeechSAXHandler extends DefaultHandler {
 
+    final Logger logger = Logger.getLogger(SpeechSAXHandler.class);
+
     private List<Speech> speechList = new LinkedList<>();
     private Speech speech;
     private StringBuilder text;
@@ -21,28 +24,33 @@ public class SpeechSAXHandler extends DefaultHandler {
         return speechList;
     }
 
+    @Override
     public void startDocument() throws SAXException {
 
-        System.out.println("Parsing started.");
+        logger.info("Parsing started.");
     }
 
+    @Override
     public void endDocument() throws SAXException {
 
-        System.out.println("Parsing ended.");
+        logger.info("Parsing ended.");
     }
 
+    @Override
     public void characters(char[] buffer, int start, int length) {
         text.append(buffer, start, length);
     }
 
+    @Override
     public void startElement(String uri, String localName, String qName,
                              Attributes attributes) throws SAXException {
         text = new StringBuilder();
-        if (qName.equals("SPEECH")) {
+        if ("SPEECH".equals(qName)) {
             speech = new Speech();
         }
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
@@ -56,6 +64,8 @@ public class SpeechSAXHandler extends DefaultHandler {
             case "SPEECH":
                 speechList.add(speech);
                 speech = null;
+                break;
+            default:
                 break;
         }
     }

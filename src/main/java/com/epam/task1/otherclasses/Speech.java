@@ -9,10 +9,10 @@ import java.util.List;
 public class Speech {
 
     private String speaker;
-    private List<String> speech;
+    private List<String> speechList;
 
     public Speech() {
-        this.speech = new LinkedList<String>();
+        this.speechList = new LinkedList<>();
     }
 
     public String getSpeaker() {
@@ -24,32 +24,24 @@ public class Speech {
     }
 
     public List<String> getSpeech() {
-        return speech;
+        return speechList;
     }
 
-    public void addLine(String text){
-        speech.add(text);
+    public void addLine(String text) {
+        speechList.add(text);
     }
 
     public void setSpeech(List<String> speech) {
-        this.speech = speech;
+        this.speechList = speech;
     }
 
-    public int getWordsInSpeech(){
+    public int getWordsInSpeech() {
         int words = 0;
-        for (String string:
-             speech) {
+        for (String string :
+                speechList) {
             words += string.split("\\s+").length;
         }
         return words;
-    }
-
-    public void showAll(){
-        System.out.println("Speaker: " + speaker);
-        for (String s:
-             speech) {
-            System.out.println("-" + s);
-        }
     }
 
 }
