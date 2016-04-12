@@ -20,6 +20,8 @@ import java.util.Scanner;
 public class View {
 
     public static final String DEFAULT_PIECE_URL_FOR_PARSE = "http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml";
+    public static final int PIECES_MIN_NUMBER = 0;
+    public static final int PIECES_MAX_NUMBER = 36;
 
     static final Logger logger = Logger.getLogger(View.class);
 
@@ -32,13 +34,13 @@ public class View {
 
         String url = getPieceChoose();
         String parser = getParserChoose();
-
         List<Speech> speechList;
+
         speechList = Controller.performParse(parser, url);
         for (Map.Entry<String, Pair> m :
                 Controller.countStatistics(speechList).entrySet()) {
             System.out.println(m.getKey() + ". Speeches: " + m.getValue().getSpeechCount()
-                                          + " Average words: " + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
+                    + " Average words: " + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
         }
     }
 
@@ -54,13 +56,12 @@ public class View {
             for (int i = 0; i < links.size(); i++) {
                 Element link = links.get(i);
                 System.out.println(i + ": " + link.text());
-
             }
             System.out.println("Enter number for select piece for parse from list above:");
             Scanner sc = new Scanner(System.in);
 
             int i = sc.nextInt();
-            if (i >= 0 && i < 36) {
+            if (i >= PIECES_MIN_NUMBER && i < PIECES_MAX_NUMBER) {
                 return links.get(i).absUrl("href");
             }
         } catch (IOException e) {

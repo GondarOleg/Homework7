@@ -10,6 +10,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class StAXMenuParser {
         } catch (XMLStreamException e) {
             logger.error(e);
         }
-        return new LinkedList<>();
+        return Collections.emptyList();
     }
 
     private static List<Speech> process(XMLStreamReader reader) throws XMLStreamException {

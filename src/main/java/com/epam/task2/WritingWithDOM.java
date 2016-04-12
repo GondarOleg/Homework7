@@ -128,8 +128,6 @@ public class WritingWithDOM {
 
         } catch (TransformerException | IOException | ParserConfigurationException e) {
             logger.error(e);
-
-
         }
 
     }

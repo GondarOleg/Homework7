@@ -25,19 +25,19 @@ public class ValidatePOM {
     private ValidatePOM() {
     }
 
-    public static String validate(String fileName) {
+    public static boolean isValid(String fileName) {
 
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(new StreamSource(new URL("https://maven.apache.org/xsd/maven-4.0.0.xsd").openStream()));
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(fileName)));
-            return "instance document is good";
+            return true;
         } catch (IOException | SAXException e) {
             org.apache.log4j.BasicConfigurator.configure();
             logger.error(e);
         }
-        return "instance document is invalid!";
+        return false;
 
     }
 }

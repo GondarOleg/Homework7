@@ -2,11 +2,7 @@ package com.epam.task2;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -23,8 +19,8 @@ public class TestsForWritigXML {
             FileWriter fileWriter = new FileWriter(FILE_NAME_FOR_TESTS);
             fileWriter.write("test");
             fileWriter.close();
-            Assert.assertEquals("instance document is invalid!", ValidatePOM.validate(FILE_NAME_FOR_TESTS));
-            Assert.assertEquals("instance document is good", ValidatePOM.validate("pom.xml"));
+            Assert.assertFalse(ValidatePOM.isValid(FILE_NAME_FOR_TESTS));
+            Assert.assertTrue(ValidatePOM.isValid("pom.xml"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,13 +30,12 @@ public class TestsForWritigXML {
     @Test
     public void testWritingWithDOM() {
         WritingWithDOM.performWrite(FILE_NAME_FOR_TESTS);
-        Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
+        Assert.assertTrue(ValidatePOM.isValid(FILE_NAME_FOR_TESTS));
     }
 
     @Test
     public void testWritingWithStAX() {
         WritingWithStAX.performWrite(FILE_NAME_FOR_TESTS);
-        Assert.assertTrue("instance document is good".equals(ValidatePOM.validate(FILE_NAME_FOR_TESTS)));
-
+        Assert.assertTrue(ValidatePOM.isValid(FILE_NAME_FOR_TESTS));
     }
 }

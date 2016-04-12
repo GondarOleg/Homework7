@@ -107,5 +107,4 @@ public class WritingWithStAX {
             logger.error(e);
         }
     }
-
 }

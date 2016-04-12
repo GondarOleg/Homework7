@@ -8,10 +8,7 @@ import com.epam.task1.stax.StAXMenuParser;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Oleg on 11.04.2016.
@@ -37,7 +34,7 @@ public class Controller {
                     logger.error(e);
                 }
         }
-        return new LinkedList<>();
+        return Collections.emptyList();
     }
 
     public static Map<String, Pair> countStatistics(List<Speech> list) {
@@ -59,5 +56,4 @@ public class Controller {
         }
         return map;
     }
-
 }

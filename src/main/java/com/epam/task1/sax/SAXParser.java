@@ -8,6 +8,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,12 +34,10 @@ public class SAXParser {
             reader.parse(new InputSource(url));
 
             return handler.getSpeechList();
-        } catch (SAXException e) {
-            logger.error("Sorry, in SAX something wrong!", e);
-        } catch (IOException e) {
-            logger.error("Sorry, in IO something wrong!", e);
+        } catch (SAXException | IOException e) {
+            logger.error(e);
         }
-        return new LinkedList<>();
+        return Collections.emptyList();
     }
 
 

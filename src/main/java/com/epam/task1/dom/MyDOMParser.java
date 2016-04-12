@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,9 +23,7 @@ public class MyDOMParser {
     static final Logger logger = Logger.getLogger(MyDOMParser.class);
 
     private MyDOMParser() {
-
     }
-
 
     public static List<Speech> performParse(String url) {
 
@@ -49,12 +48,10 @@ public class MyDOMParser {
             }
 
             return menu;
-        } catch (SAXException e) {
-            logger.error("Sorry, in SAX something wrong!", e);
-        } catch (IOException e) {
-            logger.error("Sorry, in IO something wrong!", e);
+        } catch (SAXException | IOException e) {
+            logger.error(e);
         }
-        return new LinkedList<>();
+        return Collections.emptyList();
     }
 
     private static void checkLINE(Speech speech, NodeList lineNodes) {
