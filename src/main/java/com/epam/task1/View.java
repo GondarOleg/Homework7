@@ -7,7 +7,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -32,7 +31,7 @@ public class View {
     private View() {
     }
 
-    public static void main(String[] args) throws SAXException {
+    public static void main(String[] args) {
 
         org.apache.log4j.BasicConfigurator.configure();
 
@@ -47,40 +46,34 @@ public class View {
         }
     }
 
-    public static String getPieceChoose() throws SAXException {
+    public static String getPieceChoose() {
 
         Scanner sc = new Scanner(System.in);
-        Elements links = getAndShowLinksFromSite();
-        System.out.println(ASK_FOR_PIECE_SELECTION);
         try {
+            Elements links = getAndShowLinksFromSite();
+            System.out.println(ASK_FOR_PIECE_SELECTION);
             int userChoise = sc.nextInt();
             if (userChoise >= PIECES_MIN_NUMBER && userChoise < PIECES_MAX_NUMBER) {
                 return links.get(userChoise).absUrl("href");
             }
-        } catch (InputMismatchException e) {
-            org.apache.log4j.BasicConfigurator.configure();
-            logger.error("Wrong input, continue with default value - " + DEFAULT_PIECE_URL_FOR_PARSE);
+        } catch (InputMismatchException | IOException e) {
+
+            logger.error("Error in input " + e + " continue with default value - " + DEFAULT_PIECE_URL_FOR_PARSE);
         }
         return DEFAULT_PIECE_URL_FOR_PARSE;
     }
 
-    public static Elements getAndShowLinksFromSite() {
+    public static Elements getAndShowLinksFromSite() throws IOException {
         Document doc;
-        try {
-            doc = Jsoup.connect(PIECES_URL_FOR_PARSE).get();
-            String title = doc.title();
-            System.out.println(title);
-            Elements links = doc.select("LI a[href]");
-            for (int i = 0; i < links.size(); i++) {
-                Element link = links.get(i);
-                System.out.println(i + ": " + link.text());
-            }
-            return links;
-        } catch (IOException e) {
-            org.apache.log4j.BasicConfigurator.configure();
-            logger.error(e);
+        doc = Jsoup.connect(PIECES_URL_FOR_PARSE).get();
+        String title = doc.title();
+        System.out.println(title);
+        Elements links = doc.select("LI a[href]");
+        for (int i = 0; i < links.size(); i++) {
+            Element link = links.get(i);
+            System.out.println(i + ": " + link.text());
         }
-        return new Elements();
+        return links;
     }
 
     public static String getParserChoose() {
