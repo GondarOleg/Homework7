@@ -58,6 +58,7 @@ public class View {
                 return links.get(userChoise).absUrl("href");
             }
         } catch (InputMismatchException e) {
+            org.apache.log4j.BasicConfigurator.configure();
             logger.error("Wrong input, continue with default value - " + DEFAULT_PIECE_URL_FOR_PARSE);
         }
         return DEFAULT_PIECE_URL_FOR_PARSE;
@@ -76,6 +77,7 @@ public class View {
             }
             return links;
         } catch (IOException e) {
+            org.apache.log4j.BasicConfigurator.configure();
             logger.error(e);
         }
         return new Elements();

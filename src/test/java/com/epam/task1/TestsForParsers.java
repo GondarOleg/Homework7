@@ -12,6 +12,9 @@ import java.util.List;
 
 /**
  * Created by O.Gondar on 12.04.2016.
+ *
+ *  <b>Note:</b> You need Internet connection for successfully perform tests!
+ *
  */
 public class TestsForParsers {
 
@@ -23,22 +26,20 @@ public class TestsForParsers {
 
     List<Speech> speechList;
 
-
-
     @Test
-    public void testDOMParser(){
+    public void testDOMParser() {
         speechList = MyDOMParser.performParse(TEST_PIECE_URL);
         testParserOnSampleSpeaker(speechList);
     }
 
     @Test
-    public void testSAXParser(){
+    public void testSAXParser() {
         speechList = MySAXParser.performParse(TEST_PIECE_URL);
         testParserOnSampleSpeaker(speechList);
     }
 
     @Test
-    public void testStAXParser(){
+    public void testStAXParser() {
         try {
             speechList = MyStAXParser.performParse(TEST_PIECE_URL);
             testParserOnSampleSpeaker(speechList);
@@ -47,18 +48,12 @@ public class TestsForParsers {
         }
     }
 
-
-    private void testParserOnSampleSpeaker(List<Speech> speechList){
+    private void testParserOnSampleSpeaker(List<Speech> speechList) {
         Assert.assertEquals(SPEAKER_NAME_TEST_RESULT, speechList.get(SPEAKER_NUMBER_FOR_TEST).getSpeaker());
         Assert.assertEquals(SPEAKER_SPEECH_TEST_RESULT, speechList.get(SPEAKER_NUMBER_FOR_TEST).getSpeech().toString());
         Assert.assertTrue(SPEAKER_WORDS_COUNT_TEST_RESULT == speechList.get(SPEAKER_NUMBER_FOR_TEST).getWordsInSpeech());
-        }
-
-
-
-
-
     }
+}
 
 
 

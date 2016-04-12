@@ -32,7 +32,6 @@ public class MySAXParser {
             MySAXHandler handler = new MySAXHandler();
             reader.setContentHandler(handler);
             reader.parse(new InputSource(url));
-
             return handler.getSpeechList();
         } catch (SAXException | IOException e) {
             org.apache.log4j.BasicConfigurator.configure();

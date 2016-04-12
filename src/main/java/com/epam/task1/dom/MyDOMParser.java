@@ -49,6 +49,7 @@ public class MyDOMParser {
 
             return menu;
         } catch (SAXException | IOException e) {
+            org.apache.log4j.BasicConfigurator.configure();
             logger.error(e);
         }
         return Collections.emptyList();
