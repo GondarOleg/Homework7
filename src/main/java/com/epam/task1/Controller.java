@@ -3,8 +3,8 @@ package com.epam.task1;
 import com.epam.task1.dom.MyDOMParser;
 import com.epam.task1.otherclasses.Pair;
 import com.epam.task1.otherclasses.Speech;
-import com.epam.task1.sax.SAXParser;
-import com.epam.task1.stax.StAXMenuParser;
+import com.epam.task1.sax.MySAXParser;
+import com.epam.task1.stax.MyStAXParser;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class Controller {
 
-    static final Logger logger = Logger.getLogger(View.class);
+    private static final Logger logger = Logger.getLogger(View.class);
 
     private Controller() {
     }
@@ -26,10 +26,10 @@ public class Controller {
             case "DOM":
                 return MyDOMParser.performParse(url);
             case "SAX":
-                return SAXParser.performParse(url);
+                return MySAXParser.performParse(url);
             default:
                 try {
-                    return StAXMenuParser.performParse(url);
+                    return MyStAXParser.performParse(url);
                 } catch (IOException e) {
                     logger.error(e);
                 }
@@ -52,7 +52,6 @@ public class Controller {
             } else {
                 map.put(speaker, new Pair(1, speech.getWordsInSpeech()));
             }
-
         }
         return map;
     }

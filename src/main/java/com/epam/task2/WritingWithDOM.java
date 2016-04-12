@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class WritingWithDOM {
 
-    static final Logger logger = Logger.getLogger(WritingWithDOM.class);
+    private static final Logger logger = Logger.getLogger(WritingWithDOM.class);
 
     private WritingWithDOM() {
     }

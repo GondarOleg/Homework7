@@ -17,20 +17,22 @@ import java.util.List;
 /**
  * Created by Oleg on 09.04.2016.
  */
-public class StAXMenuParser {
+public class MyStAXParser {
 
-    static final Logger logger = Logger.getLogger(StAXMenuParser.class);
+    private static final String IGNORE_EXTERNAL_DTD_URL = "http://java.sun.com/xml/stream/properties/ignore-external-dtd";
+    private static final String SPEECH_TAG_ID = "SPEECH";
 
-    private StAXMenuParser() {
+    private static final Logger logger = Logger.getLogger(MyStAXParser.class);
+
+    private MyStAXParser() {
     }
 
     public static List<Speech> performParse(String url) throws IOException {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        inputFactory.setProperty("http://java.sun.com/xml/stream/properties/ignore-external-dtd", Boolean.TRUE);
+        inputFactory.setProperty(IGNORE_EXTERNAL_DTD_URL, Boolean.TRUE);
         try {
             InputStream input = new URL(url).openStream();
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input);
-
             return process(reader);
         } catch (XMLStreamException e) {
             logger.error(e);
@@ -48,43 +50,42 @@ public class StAXMenuParser {
             switch (type) {
                 case XMLStreamConstants.START_ELEMENT:
                     elementName = reader.getLocalName();
-                    switch (elementName) {
-                        case "SPEECH":
-                            speech = new Speech();
-                            break;
+                    if (SPEECH_TAG_ID.equals(elementName)) {
+                        speech = new Speech();
                     }
                     break;
                 case XMLStreamConstants.CHARACTERS:
                     String text = reader.getText().trim();
-                    if (text.isEmpty()) {
-                        break;
-                    }
-                    if (elementName != null) {
-
-                        switch (elementName) {
-                            case "SPEAKER":
-                                if (speech != null) {
-                                    speech.setSpeaker(text);
-                                }
-                                break;
-                            case "LINE":
-                                if (speech != null) {
-                                    speech.addLine(text);
-                                }
-                                break;
-                            case "SPEECH":
-                                break;
-                        }
-                    }
+                    processCharacters(elementName, speech, text);
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     elementName = reader.getLocalName();
-                    switch (elementName) {
-                        case "SPEECH":
+                    if (SPEECH_TAG_ID.equals(elementName)) {
                             menu.add(speech);
                     }
+                    break;
+                default:
+                    break;
             }
         }
         return menu;
+    }
+
+    private static void processCharacters(String elementName, Speech speech, String text){
+        if (!text.isEmpty() && elementName != null && speech != null) {
+
+            switch (elementName) {
+                case "SPEAKER":
+                    speech.setSpeaker(text);
+                    break;
+                case "LINE":
+                    speech.addLine(text);
+                    break;
+                case "SPEECH":
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

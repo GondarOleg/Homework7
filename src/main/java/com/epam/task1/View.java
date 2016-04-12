@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,11 +20,14 @@ import java.util.Scanner;
  */
 public class View {
 
-    public static final String DEFAULT_PIECE_URL_FOR_PARSE = "http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml";
-    public static final int PIECES_MIN_NUMBER = 0;
-    public static final int PIECES_MAX_NUMBER = 36;
+    private static final int PIECES_MIN_NUMBER = 0;
+    private static final int PIECES_MAX_NUMBER = 36;
+    private static final String PIECES_URL_FOR_PARSE = "http://www.ibiblio.org/xml/examples/shakespeare/";
+    private static final String DEFAULT_PIECE_URL_FOR_PARSE = "http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml";
+    private static final String ASK_FOR_PIECE_SELECTION = "Enter number to select piece for parse from list above (by default \"Alls Well That Ends Well\"):";
+    private static final String ASK_FOR_PARSER_SELECTION = "Enter parsing method (DOM, SAX or StAX (by default)):";
 
-    static final Logger logger = Logger.getLogger(View.class);
+    private static final Logger logger = Logger.getLogger(View.class);
 
     private View() {
     }
@@ -34,44 +38,51 @@ public class View {
 
         String url = getPieceChoose();
         String parser = getParserChoose();
-        List<Speech> speechList;
+        List<Speech> speechList = Controller.performParse(parser, url);
 
-        speechList = Controller.performParse(parser, url);
         for (Map.Entry<String, Pair> m :
                 Controller.countStatistics(speechList).entrySet()) {
             System.out.println(m.getKey() + ". Speeches: " + m.getValue().getSpeechCount()
-                    + " Average words: " + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
+                    + " Average words in speech: " + m.getValue().getWordsCount() / m.getValue().getSpeechCount());
         }
     }
 
     public static String getPieceChoose() throws SAXException {
+
+        Scanner sc = new Scanner(System.in);
+        Elements links = getAndShowLinksFromSite();
+        System.out.println(ASK_FOR_PIECE_SELECTION);
+        try {
+            int userChoise = sc.nextInt();
+            if (userChoise >= PIECES_MIN_NUMBER && userChoise < PIECES_MAX_NUMBER) {
+                return links.get(userChoise).absUrl("href");
+            }
+        } catch (InputMismatchException e) {
+            logger.error("Wrong input, continue with default value - " + DEFAULT_PIECE_URL_FOR_PARSE);
+        }
+        return DEFAULT_PIECE_URL_FOR_PARSE;
+    }
+
+    public static Elements getAndShowLinksFromSite() {
         Document doc;
         try {
-            doc = Jsoup.connect("http://www.ibiblio.org/xml/examples/shakespeare/").get();
+            doc = Jsoup.connect(PIECES_URL_FOR_PARSE).get();
             String title = doc.title();
             System.out.println(title);
-            System.out.println("Enter number for select piece for parse:");
-
             Elements links = doc.select("LI a[href]");
             for (int i = 0; i < links.size(); i++) {
                 Element link = links.get(i);
                 System.out.println(i + ": " + link.text());
             }
-            System.out.println("Enter number for select piece for parse from list above:");
-            Scanner sc = new Scanner(System.in);
-
-            int i = sc.nextInt();
-            if (i >= PIECES_MIN_NUMBER && i < PIECES_MAX_NUMBER) {
-                return links.get(i).absUrl("href");
-            }
+            return links;
         } catch (IOException e) {
             logger.error(e);
         }
-        return DEFAULT_PIECE_URL_FOR_PARSE;
+        return new Elements();
     }
 
     public static String getParserChoose() {
-        System.out.println("Enter parsing method (DOM, SAX or StAX (by default)):");
+        System.out.println(ASK_FOR_PARSER_SELECTION);
         return new Scanner(System.in).nextLine();
     }
 }

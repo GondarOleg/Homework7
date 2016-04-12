@@ -1,7 +1,6 @@
 package com.epam.task1.sax;
 
 import com.epam.task1.otherclasses.Speech;
-import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -12,9 +11,7 @@ import java.util.List;
 /**
  * Created by Oleg on 09.04.2016.
  */
-public class SpeechSAXHandler extends DefaultHandler {
-
-    final Logger logger = Logger.getLogger(SpeechSAXHandler.class);
+public class MySAXHandler extends DefaultHandler {
 
     private List<Speech> speechList = new LinkedList<>();
     private Speech speech;
@@ -26,14 +23,12 @@ public class SpeechSAXHandler extends DefaultHandler {
 
     @Override
     public void startDocument() throws SAXException {
-
-        logger.info("Parsing started.");
+        //
     }
 
     @Override
     public void endDocument() throws SAXException {
-
-        logger.info("Parsing ended.");
+        //
     }
 
     @Override

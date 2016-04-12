@@ -9,18 +9,18 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 
 /**
  * Created by Oleg on 09.04.2016.
  */
-public class SAXParser {
+public class MySAXParser {
 
-    static final Logger logger = Logger.getLogger(SAXParser.class);
+    private static final String LOAD_EXTERNAL_DTD_URL = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+    private static final Logger logger = Logger.getLogger(MySAXParser.class);
 
-    private SAXParser() {
+    private MySAXParser() {
     }
 
     public static List<Speech> performParse(String url) {
@@ -28,13 +28,14 @@ public class SAXParser {
         XMLReader reader = null;
         try {
             reader = XMLReaderFactory.createXMLReader();
-            reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            SpeechSAXHandler handler = new SpeechSAXHandler();
+            reader.setFeature(LOAD_EXTERNAL_DTD_URL, false);
+            MySAXHandler handler = new MySAXHandler();
             reader.setContentHandler(handler);
             reader.parse(new InputSource(url));
 
             return handler.getSpeechList();
         } catch (SAXException | IOException e) {
+            org.apache.log4j.BasicConfigurator.configure();
             logger.error(e);
         }
         return Collections.emptyList();

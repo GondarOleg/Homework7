@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class WritingWithStAX {
 
-    static final Logger logger = Logger.getLogger(WritingWithStAX.class);
+    private static final Logger logger = Logger.getLogger(WritingWithStAX.class);
 
     private WritingWithStAX() {
     }

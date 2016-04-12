@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class MyDOMParser {
 
-    static final Logger logger = Logger.getLogger(MyDOMParser.class);
+    private static final String LOAD_EXTERNAL_DTD_URL = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+    private static final Logger logger = Logger.getLogger(MyDOMParser.class);
 
     private MyDOMParser() {
     }
@@ -29,7 +30,7 @@ public class MyDOMParser {
 
         DOMParser parser = new DOMParser();
         try {
-            parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            parser.setFeature(LOAD_EXTERNAL_DTD_URL, false);
             parser.parse(url);
             Document document = parser.getDocument();
             Element root = document.getDocumentElement();
@@ -41,7 +42,6 @@ public class MyDOMParser {
                 Speech speech = new Speech();
                 Element speechElement = (Element) speechNodes.item(i);
                 speech.setSpeaker(getSingleChild(speechElement, "SPEAKER").getTextContent().trim());
-
                 NodeList lineNodes = speechElement.getChildNodes();
                 checkLINE(speech, lineNodes);
                 menu.add(speech);

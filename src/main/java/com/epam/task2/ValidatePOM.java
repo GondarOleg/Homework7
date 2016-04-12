@@ -19,8 +19,8 @@ import java.net.URL;
  */
 public class ValidatePOM {
 
-    static final Logger logger = Logger.getLogger(ValidatePOM.class);
-
+    private static final String MAVEN_SCHEMA_URL = "https://maven.apache.org/xsd/maven-4.0.0.xsd";
+    private static final Logger logger = Logger.getLogger(ValidatePOM.class);
 
     private ValidatePOM() {
     }
@@ -29,7 +29,7 @@ public class ValidatePOM {
 
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(new URL("https://maven.apache.org/xsd/maven-4.0.0.xsd").openStream()));
+            Schema schema = factory.newSchema(new StreamSource(new URL(MAVEN_SCHEMA_URL).openStream()));
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(fileName)));
             return true;
