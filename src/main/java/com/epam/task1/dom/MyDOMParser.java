@@ -18,16 +18,11 @@ import java.util.List;
 /**
  * Created by O.Gondar on 13.04.2016.
  */
-public class MyJavaDOMParser {
+public class MyDOMParser {
 
-    private static final Logger logger = Logger.getLogger(MySunDOMParser.class);
+    private static final Logger logger = Logger.getLogger(MyDOMParser.class);
 
-    private MyJavaDOMParser() {
-    }
-
-
-    public static void main(String[] args) {
-        MyJavaDOMParser.performParse("http://www.ibiblio.org/xml/examples/shakespeare/all_well.xml");
+    private MyDOMParser() {
     }
 
     public static List<Speech> performParse(String url) {
@@ -41,6 +36,7 @@ public class MyJavaDOMParser {
             return parse(nList);
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
+            org.apache.log4j.BasicConfigurator.configure();
             logger.error(e);
         }
         return Collections.emptyList();
